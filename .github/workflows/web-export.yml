@@ -1,0 +1,88 @@
+# Export a single-threaded Web build and publish it to gh-pages/<branch>/.
+# gh-pages itself is excluded so the publish commit does not retrigger this workflow.
+name: Publish web build
+
+on:
+  push:
+    branches-ignore:
+      - gh-pages
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gh-pages-publish
+  cancel-in-progress: false
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            unzip curl ca-certificates \
+            libfontconfig1 libx11-6 libxcursor1 libxinerama1 libxext6 \
+            libxrandr2 libxi6 libgl1 libxkbcommon0
+
+      - name: Install Godot 4.7.2 and official export templates
+        run: |
+          set -euo pipefail
+          GODOT_VERSION=4.7.2
+          mkdir -p "$HOME/.local/bin"
+          mkdir -p "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          curl -fL --retry 3 -o /tmp/godot.zip \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q -o /tmp/godot.zip -d /tmp/godot-bin
+          install -m 0755 /tmp/godot-bin/Godot_v${GODOT_VERSION}-stable_linux.x86_64 "$HOME/.local/bin/godot"
+          curl -fL --retry 3 -o /tmp/templates.tpz \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          unzip -q -o /tmp/templates.tpz \
+            "templates/version.txt" \
+            "templates/web_nothreads_release.zip" \
+            "templates/web_nothreads_debug.zip" \
+            -d /tmp/godot-templates
+          mv /tmp/godot-templates/templates/* "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable/"
+          godot --version
+
+      - name: Export Web build without thread support
+        run: |
+          set -euo pipefail
+          mkdir -p build/web
+          godot --headless --editor --quit --path .
+          godot --headless --path . --export-release "Web" "$PWD/build/web/index.html"
+          test -f build/web/index.html
+          test -f build/web/index.wasm
+          test -f build/web/index.pck
+          # The engine script mentions SharedArrayBuffer in feature detection even when
+          # threads are off. The export flag in index.html is the real switch.
+          if ! grep -q "const GODOT_THREADS_ENABLED = false;" build/web/index.html; then
+            echo "Web export did not disable thread support."
+            exit 1
+          fi
+          if grep -q '"ensureCrossOriginIsolationHeaders":true' build/web/index.html; then
+            echo "Cross-origin isolation workaround is on; plain static hosting would break."
+            exit 1
+          fi
+
+      - name: Assemble per-branch folder
+        run: |
+          set -euo pipefail
+          mkdir -p build/pages
+          touch build/pages/.nojekyll
+          dest="build/pages/${GITHUB_REF_NAME}"
+          mkdir -p "$dest"
+          cp -a build/web/. "$dest/"
+
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/pages
+          keep_files: true
+          force_orphan: false
+          commit_message: "Publish web build for ${{ github.ref_name }}"
