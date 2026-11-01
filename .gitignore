@@ -1,0 +1,25 @@
+# Godot 4
+.godot/
+.import/
+/android/
+*.translation
+
+# Mono / C#
+.mono/
+data_*/
+mono_crash.*.json
+
+# Local web export. CI publishes this; it is not part of the source tree.
+/build/
+
+# export_presets.cfg is tracked on purpose. The Web preset keeps thread
+# support off so the game runs on plain static hosting without SharedArrayBuffer.
+
+# Python
+__pycache__/
+*.pyc
+
+# OS / editor
+.DS_Store
+*~
+*.tmp
