@@ -12,8 +12,8 @@ config_version=5
 
 config/name="Birtunner"
 config/description="A tiny runner inside a computer."
-config/version="0.1.0"
-run/main_scene="res://scenes/test_room.tscn"
+config/version="0.2.0"
+run/main_scene="res://scenes/desktop.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 boot_splash/bg_color=Color(0.070588, 0.082353, 0.121569, 1)
 boot_splash/image="res://art/splash.png"

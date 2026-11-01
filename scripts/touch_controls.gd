@@ -26,6 +26,9 @@ var pressed := {}
 
 
 func _ready() -> void:
+	Input.action_release("move_left")
+	Input.action_release("move_right")
+	Input.action_release("jump")
 	normal = {
 		"move_left": left_sprite.texture,
 		"move_right": right_sprite.texture,

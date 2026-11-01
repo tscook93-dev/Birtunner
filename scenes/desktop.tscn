@@ -1,0 +1,67 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/desktop.gd" id="1_desk"]
+[ext_resource type="PackedScene" path="res://scenes/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/touch.tscn" id="3_touch"]
+[ext_resource type="Texture2D" path="res://art/letter_icon.png" id="4_letter"]
+[ext_resource type="Texture2D" path="res://art/album_icon.png" id="5_album"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_door"]
+size = Vector2(70, 78)
+
+[node name="Desktop" type="Node2D"]
+script = ExtResource("1_desk")
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(320, 376)
+
+[node name="Album" type="Sprite2D" parent="."]
+z_index = 3
+texture_filter = 1
+modulate = Color(0.82, 0.84, 0.86, 1)
+position = Vector2(640, 372)
+scale = Vector2(2, 2)
+texture = ExtResource("5_album")
+
+[node name="Letter" type="Area2D" parent="."]
+z_index = 3
+collision_layer = 0
+collision_mask = 2
+position = Vector2(1040, 368)
+
+[node name="Glow" type="Polygon2D" parent="Letter"]
+color = Color(0.9, 0.28, 0.32, 0.38)
+polygon = PackedVector2Array(-40, -40, 40, -40, 40, 36, -40, 36)
+
+[node name="Sprite" type="Sprite2D" parent="Letter"]
+texture_filter = 1
+scale = Vector2(2, 2)
+texture = ExtResource("4_letter")
+
+[node name="Collision" type="CollisionShape2D" parent="Letter"]
+shape = SubResource("RectangleShape2D_door")
+
+[node name="Touch" parent="." instance=ExtResource("3_touch")]
+
+[node name="Hud" type="CanvasLayer" parent="."]
+layer = 8
+
+[node name="Title" type="Label" parent="Hud"]
+offset_left = 14.0
+offset_top = 8.0
+offset_right = 240.0
+offset_bottom = 28.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.86, 0.78, 0.62, 1)
+theme_override_font_sizes/font_size = 14
+text = "DESK"
+
+[node name="Hint" type="Label" parent="Hud"]
+offset_left = 14.0
+offset_top = 26.0
+offset_right = 360.0
+offset_bottom = 46.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.78, 0.74, 0.66, 0.95)
+theme_override_font_sizes/font_size = 11
+text = "Run into the letter"

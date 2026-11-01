@@ -1,36 +1,34 @@
 # Birtunner design
 
-Bit is a small runner moving through the inside of a computer. The full game starts on an original desktop, then Bit enters files and folders, runs and jumps along side-scrolling corridors, and avoids viruses. Clearing a file sends Bit back toward the desktop.
-
-This repository currently contains only the movement slice: run, jump, and land in one test room.
+Bit is a small runner moving through the inside of a computer. A run starts on an original desktop. Bit enters a file, runs and jumps along a side-scrolling page, and avoids the thing living in that file. Clearing a file sends Bit back to the desktop.
 
 ## Core loop
 
-Move right, jump across gaps and up onto platforms, and keep going. Later slices add a reason to travel (open a file, reach its end) and a reason to be careful (viruses). Slice 1 only checks that running and jumping feel right on a phone screen.
+From the desk, run into the letter. Inside it, stay off the floor: ILOVEYOU walks there and makes copies of itself. Jump along the lines of the page and reach the seal at the end. Getting touched sends Bit back to the start of the letter. Reaching the seal returns Bit to the desk.
 
 ## Slice plan
 
-1. **Movement and jump** — player controller, touch and keyboard, one test room, camera. This slice.
-2. **Desktop hub** — an original desktop where a run starts, with a way into the first file. It should feel like a familiar PC desktop and must not copy any existing product's names, logos, icons, wallpaper, or fonts.
-3. **First file level** — a real side-scrolling file with a start and an end, using the same run and jump.
-4. **Viruses** — simple enemies Bit has to avoid.
-5. **Level-complete screen** — shown when a file is cleared, then a path back toward the hub.
-6. **More levels** — additional files and folders that reuse the same movement.
+1. **Movement and jump** — player controller, touch and keyboard, one test room, camera. Done.
+2. **Desktop hub** — an original desk where a run starts, with a way into the first file. Done.
+3. **First file level** — the letter NOTE.LET, with a start and a seal at the end. Done.
+4. **Viruses** — ILOVEYOU, a floor walker that copies itself. Done for this one file.
+5. **Level-complete screen** — a full screen is still ahead. Clearing the letter currently shows one line and returns to the desk.
+6. **More levels** — a calendar file about surviving the year-2000 rollover, then other files. Each one can carry a different real outbreak, played as something to avoid, not as a lesson in how it spread.
 
-## Done in slice 1
+## Done
 
-- Bit runs, falls under gravity, and jumps.
-- Jump height varies with how long jump is held. A tap is a short hop; a hold is a full leap.
-- Coyote time: a jump still works for a brief moment after walking off a ledge.
-- Jump buffer: pressing jump slightly before landing still jumps on landing.
-- On-screen Left, Right, and Jump buttons. Keyboard arrows and Space do the same thing (Up jumps as well).
-- One room, Motion Bay: a floor and platforms at different heights, drawn as a simple circuit board.
-- The camera follows Bit and stays inside the room.
+- Bit runs, falls under gravity, and jumps. Jump height varies with how long jump is held.
+- Coyote time and a short jump buffer.
+- On-screen Left, Right, and Jump. Arrow keys and Space do the same (Up jumps as well).
+- The game opens on the desk. Running into the letter enters it. Reaching the seal comes back.
+- Inside the letter, ILOVEYOU chases along the floor and spawns up to two slower copies.
+- Touching it restarts Bit at the beginning of the letter.
+- Motion Bay is still in the project as the movement test room. The game does not open there.
 - Web export with thread support off, so the build does not need SharedArrayBuffer.
 
 ## Next
 
-Slice 2 is the desktop hub. Motion Bay stays as the movement test until the first file level exists. No enemies, menus, or level flow until the later slices.
+A proper "file survived" moment, then the year-2000 file: a clock runs toward midnight and the page glitches when the year rolls. Other outbreaks can wait until that file exists.
 
 ## Controls
 
@@ -38,7 +36,8 @@ Slice 2 is the desktop hub. Motion Bay stays as the movement test until the firs
 - Jump: tap for a short hop, hold for a full leap.
 - Walking off a ledge still allows a jump for about a tenth of a second.
 - A jump pressed just before landing is remembered for about a tenth of a second.
+- On the desk, stand inside the letter and it opens.
 
 ## Out of scope for now
 
-Hub, file levels, viruses, menus, saving, audio, and a level-complete flow.
+Menus, saving, audio, more than one enterable file, and the year-2000 level.
