@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/touch_controls.gd" id="1_touch"]
+[ext_resource type="Texture2D" path="res://art/btn_left.png" id="2_left"]
+[ext_resource type="Texture2D" path="res://art/btn_right.png" id="3_right"]
+[ext_resource type="Texture2D" path="res://art/btn_jump.png" id="4_jump"]
+
+[node name="Touch" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_touch")
+
+[node name="Left" type="Sprite2D" parent="."]
+texture_filter = 2
+centered = false
+position = Vector2(12, 162)
+texture = ExtResource("2_left")
+
+[node name="Right" type="Sprite2D" parent="."]
+texture_filter = 2
+centered = false
+position = Vector2(120, 162)
+texture = ExtResource("3_right")
+
+[node name="Jump" type="Sprite2D" parent="."]
+texture_filter = 2
+centered = false
+position = Vector2(372, 162)
+texture = ExtResource("4_jump")

@@ -234,6 +234,113 @@ def rounded_button(kind: str, pressed: bool) -> Image.Image:
     return img
 
 
+def _fill(image: Image.Image, box: tuple[int, int, int, int], color: tuple[int, int, int, int]) -> None:
+    pixels = image.load()
+    x0, y0, x1, y1 = box
+    for y in range(y0, y1):
+        for x in range(x0, x1):
+            pixels[x, y] = color
+
+
+def _stamp(image: Image.Image, origin: tuple[int, int], rows: list[str], palette: dict[str, tuple[int, int, int, int]]) -> None:
+    pixels = image.load()
+    ox, oy = origin
+    for y, row in enumerate(rows):
+        for x, ch in enumerate(row):
+            if ch != ".":
+                pixels[ox + x, oy + y] = palette[ch]
+
+
+def _save_icon(image: Image.Image, name: str) -> None:
+    image.save(ART / name)
+    image.resize((image.width * 8, image.height * 8), Image.Resampling.NEAREST).save(f"/tmp/{name}")
+
+
+def desk_sprites() -> None:
+    paper = (244, 230, 198, 255)
+    ink = (54, 36, 28, 255)
+    shade = (196, 164, 118, 255)
+    red = (214, 52, 66, 255)
+    white = (255, 244, 236, 255)
+    sky = (86, 176, 184, 255)
+    hill = (118, 168, 104, 255)
+    heart = {"R": red, "w": white, "p": paper, "#": ink}
+
+    letter = Image.new("RGBA", (24, 32), (0, 0, 0, 0))
+    _fill(letter, (2, 2, 22, 30), paper)
+    pixels = letter.load()
+    for x in range(2, 22):
+        pixels[x, 2] = ink
+        pixels[x, 29] = ink
+    for y in range(2, 30):
+        pixels[2, y] = ink
+        pixels[21, y] = ink
+    # Folded corner, so it reads as a sheet of paper.
+    for i, y in enumerate(range(3, 8)):
+        pixels[16 + i, y] = shade
+        pixels[21, y] = ink
+    pixels[16, 3] = ink
+    _stamp(
+        letter,
+        (6, 8),
+        [
+            ".RR..RR.",
+            "RRRRRRRR",
+            "RRRRRRRR",
+            ".RRRRRR.",
+            "..RRRR..",
+            "...RR...",
+        ],
+        heart,
+    )
+    for y in (20, 23, 26):
+        for x in range(5, 19):
+            pixels[x, y] = shade
+    _save_icon(letter, "letter_icon.png")
+
+    album = Image.new("RGBA", (24, 28), (0, 0, 0, 0))
+    _fill(album, (3, 6, 23, 24), paper)
+    _fill(album, (5, 2, 21, 8), shade)
+    ap = album.load()
+    for x in range(3, 23):
+        ap[x, 6] = ink
+        ap[x, 23] = ink
+    for y in range(6, 24):
+        ap[3, y] = ink
+        ap[22, y] = ink
+    _fill(album, (6, 9, 20, 20), sky)
+    _stamp(
+        album,
+        (6, 12),
+        [
+            "......gggggg",
+            "....gggggggg",
+            "..gggggggggg",
+            "gggggggggggg",
+        ],
+        {"g": hill},
+    )
+    _save_icon(album, "album_icon.png")
+
+    love = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    _stamp(
+        love,
+        (1, 1),
+        [
+            ".RR....RR.",
+            "RRRw..wRRR",
+            "RRRRRRRRRR",
+            "RRRRRRRRRR",
+            ".RRRpRRRR.",
+            "..RRRRRR..",
+            "...RRRR...",
+            "....RR....",
+        ],
+        heart,
+    )
+    _save_icon(love, "love.png")
+
+
 def splash_and_icon(bit: Image.Image) -> None:
     def paste_nearest(base: Image.Image, sprite: Image.Image, scale: int, center: tuple[int, int]) -> None:
         big = sprite.resize((sprite.width * scale, sprite.height * scale), Image.Resampling.NEAREST)
@@ -254,6 +361,20 @@ def splash_and_icon(bit: Image.Image) -> None:
     splash.save(ART / "splash.png")
 
 
+def flat_folder(name: str, body: tuple[int, int, int], tab: tuple[int, int, int], locked: bool) -> None:
+    image = Image.new("RGBA", (128, 128), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    draw.rounded_rectangle((20, 30, 112, 114), radius=24, fill=(24, 28, 44, 56))
+    draw.rounded_rectangle((24, 22, 70, 50), radius=12, fill=tab + (255,))
+    draw.rounded_rectangle((16, 36, 112, 108), radius=22, fill=body + (255,))
+    if locked:
+        draw.rounded_rectangle((52, 58, 76, 78), radius=10, outline=(255, 255, 255, 235), width=5)
+        draw.rounded_rectangle((46, 74, 82, 102), radius=8, fill=(255, 255, 255, 235))
+    else:
+        draw.rounded_rectangle((30, 58, 98, 92), radius=10, outline=(255, 255, 255, 210), width=5)
+    _save_icon(image, name)
+
+
 def main() -> None:
     ART.mkdir(parents=True, exist_ok=True)
     frames = [IDLE, RUN_A, RUN_B, RUN_C, RUN_D, JUMP]
@@ -270,6 +391,9 @@ def main() -> None:
         rounded_button(kind, True).save(ART / f"{name}_down.png")
 
     splash_and_icon(sheet.crop((0, 0, W, H)))
+    desk_sprites()
+    flat_folder("folder_letters.png", (230, 146, 72), (245, 190, 128), False)
+    flat_folder("folder_locked.png", (150, 158, 172), (188, 194, 206), True)
     print("wrote art")
 
 

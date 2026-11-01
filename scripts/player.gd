@@ -17,6 +17,10 @@ var run_time := 0.0
 @onready var sprite: Sprite2D = $Sprite
 
 
+func _ready() -> void:
+	add_to_group("player")
+
+
 func _physics_process(delta: float) -> void:
 	var grounded := is_on_floor()
 	if not grounded:

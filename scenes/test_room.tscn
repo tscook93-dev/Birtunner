@@ -1,11 +1,8 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/test_room.gd" id="1_room"]
 [ext_resource type="PackedScene" path="res://scenes/player.tscn" id="2_player"]
-[ext_resource type="Script" path="res://scripts/touch_controls.gd" id="3_touch"]
-[ext_resource type="Texture2D" path="res://art/btn_left.png" id="4_left"]
-[ext_resource type="Texture2D" path="res://art/btn_right.png" id="6_right"]
-[ext_resource type="Texture2D" path="res://art/btn_jump.png" id="8_jump"]
+[ext_resource type="PackedScene" path="res://scenes/touch.tscn" id="3_touch"]
 
 [node name="TestRoom" type="Node2D"]
 script = ExtResource("1_room")
@@ -13,27 +10,7 @@ script = ExtResource("1_room")
 [node name="Player" parent="." instance=ExtResource("2_player")]
 position = Vector2(320, 376)
 
-[node name="Touch" type="CanvasLayer" parent="."]
-layer = 10
-script = ExtResource("3_touch")
-
-[node name="Left" type="Sprite2D" parent="Touch"]
-texture_filter = 2
-centered = false
-position = Vector2(12, 162)
-texture = ExtResource("4_left")
-
-[node name="Right" type="Sprite2D" parent="Touch"]
-texture_filter = 2
-centered = false
-position = Vector2(120, 162)
-texture = ExtResource("6_right")
-
-[node name="Jump" type="Sprite2D" parent="Touch"]
-texture_filter = 2
-centered = false
-position = Vector2(372, 162)
-texture = ExtResource("8_jump")
+[node name="Touch" parent="." instance=ExtResource("3_touch")]
 
 [node name="Hud" type="CanvasLayer" parent="."]
 layer = 8
