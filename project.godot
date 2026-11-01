@@ -22,6 +22,7 @@ config/icon="res://icon.png"
 [autoload]
 
 InputSetup="*res://scripts/input_setup.gd"
+Session="*res://scripts/session.gd"
 
 [display]
 

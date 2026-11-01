@@ -28,7 +28,7 @@ func _ready() -> void:
 	camera.limit_left = 0
 	camera.limit_top = 0
 	camera.limit_right = int(ROOM_W)
-	camera.limit_bottom = int(ROOM_H)
+	camera.limit_bottom = 640
 	Props.add_solid(self, FLOOR, Color("3a2430"), Color("e7c9a4"), false)
 	for rect in PLATFORMS:
 		Props.add_solid(self, rect, Color("5c4038"), Color("f3e2c4"), false)
@@ -86,11 +86,12 @@ func _hint_back() -> void:
 func _return_to_desk() -> void:
 	if not is_inside_tree():
 		return
+	Session.letters_open = true
 	get_tree().change_scene_to_file("res://scenes/desktop.tscn")
 
 
 func _draw() -> void:
-	draw_rect(Rect2(0, 0, ROOM_W, ROOM_H), Color("241820"))
+	draw_rect(Rect2(0, 0, ROOM_W, 720), Color("241820"))
 	var rule := Color(0.93, 0.84, 0.7, 0.16)
 	for y in range(56, 390, 28):
 		draw_line(Vector2(24, y), Vector2(ROOM_W - 24, y), rule, 1.0)

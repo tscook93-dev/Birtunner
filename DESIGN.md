@@ -1,43 +1,55 @@
 # Birtunner design
 
-Bit is a small runner moving through the inside of a computer. A run starts on an original desktop. Bit enters a file, runs and jumps along a side-scrolling page, and avoids the thing living in that file. Clearing a file sends Bit back to the desktop.
+Bit runs through **Nimbus**, an original desktop. Folders are worlds. Files inside a folder are levels. The desktop is where a run starts. Clearing a file returns Bit to that folder's window.
 
 ## Core loop
 
-From the desk, run into the letter. Inside it, stay off the floor: ILOVEYOU walks there and makes copies of itself. Jump along the lines of the page and reach the seal at the end. Getting touched sends Bit back to the start of the letter. Reaching the seal returns Bit to the desk.
+Run along the dock and into a folder. The folder opens as a window. Choose a file to enter its level, jump through it, and avoid whatever lives there. Clearing the file closes the level and shows the folder again.
+
+## Worlds and levels
+
+- **Letters** (open) — a folder world.
+  - NOTE.LET — level 1. ILOVEYOU walks the floor and copies itself.
+  - DRAFT.LET — locked placeholder.
+  - CARD.LET — locked placeholder.
+- **Pictures** — a second folder, shown on the dock and locked.
+
+## Planned viruses
+
+Played as things to avoid. The game does not teach how the real programs spread.
+
+- **ILOVEYOU** — in NOTE.LET. A heart on the floor that copies itself. Done.
+- **Melissa** — in a document file. Wakes when Bit passes a line, then drifts toward them.
+- **Code Red** — a crawler that owns the floor. Bit has to stay on the platforms.
+- **Y2K** — not a creature. A clock file running toward midnight. When the year rolls, the page glitches and Bit has to reach the far side.
 
 ## Slice plan
 
-1. **Movement and jump** — player controller, touch and keyboard, one test room, camera. Done.
-2. **Desktop hub** — an original desk where a run starts, with a way into the first file. Done.
-3. **First file level** — the letter NOTE.LET, with a start and a seal at the end. Done.
-4. **Viruses** — ILOVEYOU, a floor walker that copies itself. Done for this one file.
-5. **Level-complete screen** — a full screen is still ahead. Clearing the letter currently shows one line and returns to the desk.
-6. **More levels** — a calendar file about surviving the year-2000 rollover, then other files. Each one can carry a different real outbreak, played as something to avoid, not as a lesson in how it spread.
+1. **Movement and jump** — done.
+2. **Desktop hub** — Nimbus: gradient wallpaper, menu bar, clock, dock, folder icons. Done for this pass.
+3. **First file level** — NOTE.LET inside the Letters window. Done.
+4. **Viruses** — ILOVEYOU only, so far.
+5. **Level-complete** — clearing NOTE.LET returns to the Letters window. A fuller screen can wait.
+6. **More levels** — unlock the other letters, then Melissa, Code Red, and the Y2K clock.
 
 ## Done
 
-- Bit runs, falls under gravity, and jumps. Jump height varies with how long jump is held.
-- Coyote time and a short jump buffer.
-- On-screen Left, Right, and Jump. Arrow keys and Space do the same (Up jumps as well).
-- The game opens on the desk. Running into the letter enters it. Reaching the seal comes back.
-- Inside the letter, ILOVEYOU chases along the floor and spawns up to two slower copies.
-- Touching it restarts Bit at the beginning of the letter.
-- Motion Bay is still in the project as the movement test room. The game does not open there.
-- Web export with thread support off, so the build does not need SharedArrayBuffer.
-
-## Next
-
-A proper "file survived" moment, then the year-2000 file: a clock runs toward midnight and the page glitches when the year rolls. Other outbreaks can wait until that file exists.
+- Run, variable jump, coyote time, jump buffer.
+- On-screen Left, Right, and Jump, plus arrow keys and Space. The buttons are smaller and translucent, and the floor sits above them.
+- Nimbus desktop. Run into Letters to open its window. Pictures is locked.
+- NOTE.LET is playable. DRAFT.LET and CARD.LET are greyed.
+- ILOVEYOU chases on the floor and spawns up to two slower copies. Touching it restarts the letter.
+- Reaching the seal returns to the Letters window.
+- Motion Bay remains in the project as a movement test and is not the opening scene.
+- Web export with thread support off.
 
 ## Controls
 
 - Left / Right: run.
 - Jump: tap for a short hop, hold for a full leap.
-- Walking off a ledge still allows a jump for about a tenth of a second.
-- A jump pressed just before landing is remembered for about a tenth of a second.
-- On the desk, stand inside the letter and it opens.
+- On the dock, stand in a folder and it opens.
+- In a folder window, tap an unlocked file. Close returns to the dock.
 
 ## Out of scope for now
 
-Menus, saving, audio, more than one enterable file, and the year-2000 level.
+Saving, audio, Melissa, Code Red, the Y2K level, and unlocking the grey files.

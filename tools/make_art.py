@@ -361,6 +361,20 @@ def splash_and_icon(bit: Image.Image) -> None:
     splash.save(ART / "splash.png")
 
 
+def flat_folder(name: str, body: tuple[int, int, int], tab: tuple[int, int, int], locked: bool) -> None:
+    image = Image.new("RGBA", (128, 128), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    draw.rounded_rectangle((20, 30, 112, 114), radius=24, fill=(24, 28, 44, 56))
+    draw.rounded_rectangle((24, 22, 70, 50), radius=12, fill=tab + (255,))
+    draw.rounded_rectangle((16, 36, 112, 108), radius=22, fill=body + (255,))
+    if locked:
+        draw.rounded_rectangle((52, 58, 76, 78), radius=10, outline=(255, 255, 255, 235), width=5)
+        draw.rounded_rectangle((46, 74, 82, 102), radius=8, fill=(255, 255, 255, 235))
+    else:
+        draw.rounded_rectangle((30, 58, 98, 92), radius=10, outline=(255, 255, 255, 210), width=5)
+    _save_icon(image, name)
+
+
 def main() -> None:
     ART.mkdir(parents=True, exist_ok=True)
     frames = [IDLE, RUN_A, RUN_B, RUN_C, RUN_D, JUMP]
@@ -378,6 +392,8 @@ def main() -> None:
 
     splash_and_icon(sheet.crop((0, 0, W, H)))
     desk_sprites()
+    flat_folder("folder_letters.png", (230, 146, 72), (245, 190, 128), False)
+    flat_folder("folder_locked.png", (150, 158, 172), (188, 194, 206), True)
     print("wrote art")
 
 

@@ -3,9 +3,9 @@ extends CanvasLayer
 ## On-screen Left, Right, and Jump. Handles real touches and mouse clicks,
 ## because TouchScreenButton ignores the mouse unless touch emulation is on.
 
-const BUTTON := 96.0
-const MARGIN := 12.0
-const GAP := 12.0
+const BUTTON := 64.0
+const MARGIN := 14.0
+const GAP := 10.0
 
 const ACTIONS := ["move_left", "move_right", "jump"]
 
@@ -39,6 +39,10 @@ func _ready() -> void:
 		"move_right": preload("res://art/btn_right_down.png"),
 		"jump": preload("res://art/btn_jump_down.png"),
 	}
+	var fitted := BUTTON / 96.0
+	for sprite in [left_sprite, right_sprite, jump_sprite]:
+		sprite.scale = Vector2(fitted, fitted)
+		sprite.modulate = Color(1, 1, 1, 0.78)
 	get_viewport().size_changed.connect(_layout)
 	_layout()
 
